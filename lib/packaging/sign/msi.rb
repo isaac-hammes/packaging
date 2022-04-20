@@ -7,13 +7,14 @@ module Pkg::Sign::Msi
     require 'json'
     require 'net/http'
     require 'uri'
-    
+
     service_account_credentials = '/var/lib/jenkins/.config/gcloud/legacy_credentials/windows-signer@puppet-release-engineering.iam.gserviceaccount.com/puppet-release-engineering-c771bdb33ee8.json'
     service_url = 'https://serverless-sign-4k7em2ejkq-uc.a.run.app/signMSI'
 
     authorizer = Google::Auth::ServiceAccountCredentials.make_creds(
       json_key_io: File.open(service_account_credentials),
-      target_audience: service_url)
+      target_audience: service_url
+    )
 
     gcp_auth_token = authorizer.fetch_access_token!['id_token']
 
@@ -39,16 +40,16 @@ module Pkg::Sign::Msi
     msis.each do |msi|
       begin
         tosign_bucket.create_file(msi, msi)
-      rescue => e
+      rescue StandardError => e
         delete_tosign_msis(tosign_bucket, msis)
         fail "There was an error uploading #{msi} to the windows-tosign-bucket gcp bucket.\n#{e}"
       end
       msi_json = { 'Path': msi }
       request.body = msi_json.to_json
-      begin 
+      begin
         response = http.request(request)
         response_body = JSON.parse(JSON.parse(response.body.to_json), :quirks_mode => true)
-      rescue => e
+      rescue StandardError => e
         delete_tosign_msis(tosign_bucket, msis)
         delete_signed_msis(signed_bucket, signed_msis)
         fail "There was an error signing #{msi}.\n#{e}"
@@ -63,7 +64,7 @@ module Pkg::Sign::Msi
       begin
         signed_msi = signed_bucket.file(signed_msis[msi])
         signed_msi.download(msi)
-      rescue => e
+      rescue StandardError => e
         delete_tosign_msis(tosign_bucket, msis)
         delete_signed_msis(signed_bucket, signed_msis)
         fail "There was an error retrieving the signed msi:#{msi}.\n#{e}"
