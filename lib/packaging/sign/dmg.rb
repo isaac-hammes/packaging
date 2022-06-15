@@ -41,11 +41,11 @@ module Pkg::Sign::Dmg
             --file #{remote_working_directory}/$dmg.dmg" ;
           UUID=$($notarization_command | grep -Ewo '[[:xdigit:]]{8}(-[[:xdigit:]]{4}){3}-[[:xdigit:]]{12}') ;
           notarization_info="xcrun altool --notarization-info $UUID -u $PUPPET_APPLE_DEV_EMAIL -p $PUPPET_APPLE_DEV_PW" ;
-          while $notarization_info | grep -q 'in progress'; do
+          while $notarization_info | grep 'in progress'; do
             echo "Waiting on Apple Notarization Service... sleep 10 and try again..." ;
             sleep 10 ;
           done ;
-          if $notarization_info | grep -q 'Package Approved'; then
+          if $notarization_info | grep 'Package Approved'; then
             echo "Package approved by apple notarization service. Stapling ticket to package." ;
             xcrun stapler staple #{remote_working_directory}/$dmg.dmg ;
           else
