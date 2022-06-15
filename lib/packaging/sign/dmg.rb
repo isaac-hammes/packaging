@@ -49,7 +49,7 @@ module Pkg::Sign::Dmg
             echo "Package approved by apple notarization service. Stapling ticket to package." ;
             xcrun stapler staple #{remote_working_directory}/$dmg.dmg ;
           else
-            echo "Package could not be approved by apple notarization service. Exiting signing process..." ;
+            echo $notarization_info ;
             exit 1 ;
           fi ;
           ].join(' ')
