@@ -254,6 +254,18 @@ namespace :pl do
       end
     end
 
+    desc "Sync signed apt repos from #{Pkg::Config.apt_signing_server} to S3"
+    task :future_deploy_apt_repo_to_s3 => 'pl:fetch' do
+      s3_sync_command = "#{S3_REPO_SYNC} apt.repos.puppet.com"
+
+      puts "Sync apt repos from #{Pkg::Config.apt_signing_server} to S3? [y,n]"
+      next unless Pkg::Util.ask_yes_or_no
+
+      Pkg::Util::Execution.retry_on_fail(times: 3) do
+        Pkg::Util::Net.remote_execute(Pkg::Config.apt_signing_server, s3_sync_command)
+      end
+    end
+
     desc "Sync signed yum repos from #{Pkg::Config.yum_staging_server} to S3"
     task :deploy_yum_repo_to_s3 => 'pl:fetch' do
       s3_sync_command = "#{S3_REPO_SYNC} yum.puppetlabs.com"
