@@ -268,11 +268,6 @@ namespace :pl do
       # mark the build as successfully shipped
       Rake::Task["pl:jenkins:ship"].invoke("shipped")
       # add the release to release-metrics
-      begin
-        Rake::Task["pl:update_release_metrics"].invoke
-      rescue StandardError => e
-        fail "Error updating release-metrics:\n#{e}\nYou will need to add this release manually."
-      end
     end
 
     task :stage_nightlies => "pl:fetch" do
