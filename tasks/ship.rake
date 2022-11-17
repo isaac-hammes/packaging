@@ -256,7 +256,7 @@ namespace :pl do
 
     desc "Sync signed apt repos from #{Pkg::Config.apt_signing_server} to S3"
     task :future_deploy_apt_repo_to_s3 => 'pl:fetch' do
-      s3_sync_command = "#{S3_REPO_SYNC} apt.repos.puppet.com"
+      s3_sync_command = "#{S3_REPO_SYNC} apt.repos.puppet.com puppet6"
 
       puts "Sync apt repos from #{Pkg::Config.apt_signing_server} to S3? [y,n]"
       next unless Pkg::Util.ask_yes_or_no
