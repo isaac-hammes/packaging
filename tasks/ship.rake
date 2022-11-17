@@ -240,11 +240,11 @@ namespace :pl do
 
     ##
     ## S3 syncing
-    S3_REPO_SYNC = 'sudo /usr/local/bin/s3_repo_sync.sh'
+    S3_REPO_SYNC = 'sudo /usr/local/bin/s3_repo_sync'
 
     desc "Sync signed apt repos from #{Pkg::Config.apt_signing_server} to S3"
     task :deploy_apt_repo_to_s3 => 'pl:fetch' do
-      s3_sync_command = "#{S3_REPO_SYNC} apt.repos.puppetlabs.com"
+      s3_sync_command = "#{S3_REPO_SYNC} apt.puppetlabs.com"
 
       puts "Sync apt repos from #{Pkg::Config.apt_signing_server} to S3? [y,n]"
       next unless Pkg::Util.ask_yes_or_no
