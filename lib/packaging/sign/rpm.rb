@@ -65,15 +65,7 @@ module Pkg::Sign::Rpm
     gpg_executable = Pkg::Util::Tool.find_tool('gpg')
 
     # rubocop:disable Lint/NestedPercentLiteral
-    %W[
-      #{gpg_executable} --sign --detach-sign
-      #{signing_version_flags(signing_version)}
-      #{passphrase_fd_flag}
-      --batch --no-armor --no-secmem-warning
-      --local-user %{_gpg_name}
-      --output %{__signature_filename}
-        %{__plaintext_filename}
-    ].join(' ')
+    "#{gpg_executable} --sign --detach-sign #{signing_version_flags(signing_version)} #{passphrase_fd_flag} --batch --no-armor --no-secmem-warning --local-user %{_gpg_name} --output %{__signature_filename} %{__plaintext_filename}"
     # rubocop:enable Lint/NestedPercentLiteral
   end
 
