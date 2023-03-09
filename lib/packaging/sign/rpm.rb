@@ -35,6 +35,7 @@ module Pkg::Sign::Rpm
     ].join(' ')
 
     Pkg::Util::Execution.capture3(sign_command, true)
+    puts 'FINISHED SIGNING RPMS'
   end
 
   def sign_gpg_1(rpm_path, signing_version)
@@ -179,7 +180,7 @@ module Pkg::Sign::Rpm
       puts "Signing modern (v4) rpms:"
       sign(v4_rpms.join(' '), :v4)
     end
-
+    puts 'MADE IT TO BEFORE WE RELINK'
     # Using the map of paths to basenames, we re-hardlink the rpms we deleted.
     all_rpms.each do |link_path, rpm_filename|
       next if File.exist? link_path
