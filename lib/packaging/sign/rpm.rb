@@ -37,7 +37,7 @@ module Pkg::Sign::Rpm
     puts sign_command
     puts '---------------'
 
-    Pkg::Util::Execution.capture3(sign_command, true)
+    `#{sign_command}`
   end
 
   def sign_gpg_1(rpm_path, signing_version)
@@ -65,7 +65,15 @@ module Pkg::Sign::Rpm
     gpg_executable = Pkg::Util::Tool.find_tool('gpg')
 
     # rubocop:disable Lint/NestedPercentLiteral
-    "#{gpg_executable} --sign --detach-sign #{signing_version_flags(signing_version)} #{passphrase_fd_flag} --batch --no-armor --no-secmem-warning --local-user %{_gpg_name} --output %{__signature_filename} %{__plaintext_filename}"
+    %W[
+      #{gpg_executable} --sign --detach-sign
+      #{signing_version_flags(signing_version)}
+      #{passphrase_fd_flag}
+      --batch --no-armor --no-secmem-warning
+      --local-user %{_gpg_name}
+      --output %{__signature_filename}
+        %{__plaintext_filename}
+    ].join(' ')
     # rubocop:enable Lint/NestedPercentLiteral
   end
 
