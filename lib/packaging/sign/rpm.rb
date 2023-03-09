@@ -11,6 +11,7 @@ module Pkg::Sign::Rpm
     if gpg_version_older_than_21?
       sign_gpg_1(rpm_path, signing_version)
     else
+      puts 'SIGN GPG2'
       sign_gpg_2(rpm_path, signing_version)
     end
   end
