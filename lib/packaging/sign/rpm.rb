@@ -1,68 +1,19 @@
 module Pkg::Sign::Rpm
   module_function
-  def sign(rpm, sign_flags = nil)
-    # To enable support for wrappers around rpm and thus support for gpg-agent
-    # rpm signing, we have to be able to tell the packaging repo what binary to
-    # use as the rpm signing tool.
-    rpm_executable = ENV['RPM'] || Pkg::Util::Tool.find_tool('rpm')
 
-    # If we're using the gpg agent for rpm signing, we don't want to specify the
-    # input for the passphrase, which is what '--passphrase-fd 3' does. However,
-    # if we're not using the gpg agent, this is required, and is part of the
-    # defaults on modern rpm. The fun part of gpg-agent signing of rpms is
-    # specifying that the gpg check command always return true
-    gpg_check_command = ''
-    input_flag = ''
-    if Pkg::Util.boolean_value(ENV['RPM_GPG_AGENT'])
-      gpg_check_command = "--define '%__gpg_check_password_cmd /bin/true'"
-    else
-      input_flag = "--passphrase-fd 3"
+  # For rpm v4-style signing, we have old (gpg < v2.1) style and new-style
+  # Dispatch those cases.
+  def sign(rpm_path, signing_version = :v4)
+    unless %i[v3 v4].include?(signing_version)
+      fail "Unknown signing version: #{signing_version}. Only ':v3' and ':v4' are supported"
     end
 
-    # If gpg version is >=2.1, use the gpg1 binary to sign. Otherwise, use the standard sign command.
-    gpg_executable = if gpg_version_older_than_21?
-                       "%__gpg /usr/bin/gpg1' --define '%__gpg_sign_cmd %{__gpg} gpg1"
-                     else
-                       '%__gpg_sign_cmd %{__gpg} gpg'
-                     end
-
-    # rubocop:disable Lint/NestedPercentLiteral
-    gpg_signing_macro = %W[
-      #{gpg_executable} #{sign_flags} #{input_flag}
-      --batch --no-verbose --no-armor
-      --no-secmem-warning -u %{_gpg_name}
-      -sbo %{__signature_filename} %{__plaintext_filename}
-    ].join(' ')
-    # rubocop:enable Lint/NestedPercentLiteral
-
-    sign_command = %W[
-      #{rpm_executable} #{gpg_check_command}
-      --define '%_gpg_name #{Pkg::Util::Gpg.key}'
-      --define '#{gpg_signing_macro}' --addsign #{rpm}
-    ].join(' ')
-
-    # Try this up to 5 times, to allow for incorrect passwords
-    Pkg::Util::Execution.retry_on_fail(:times => 5) do
-      # This definition of %__gpg_sign_cmd is the default on modern rpm. We
-      # accept extra flags to override certain signing behavior for older
-      # versions of rpm, e.g. specifying V3 signatures instead of V4.
-      Pkg::Util::Execution.capture3(sign_command)
+    if gpg_version_older_than_21?
+      sign_gpg_1(rpm_path, signing_version)
+    else
+      sign_gpg_2(rpm_path, signing_version)
     end
   end
-
-  # # For rpm v4-style signing, we have old (gpg < v2.1) style and new-style
-  # # Dispatch those cases.
-  # def sign(rpm_path, signing_version = :v4)
-  #   unless %i[v3 v4].include?(signing_version)
-  #     fail "Unknown signing version: #{signing_version}. Only ':v3' and ':v4' are supported"
-  #   end
-
-  #   if gpg_version_older_than_21?
-  #     sign_gpg_1(rpm_path, signing_version)
-  #   else
-  #     sign_gpg_2(rpm_path, signing_version)
-  #   end
-  # end
 
   # Support old, old v3 RPM signing
   def v3_sign(rpm)
@@ -226,7 +177,7 @@ module Pkg::Sign::Rpm
 
     unless v4_rpms.empty?
       puts "Signing modern (v4) rpms:"
-      sign(v4_rpms.join(' '))
+      sign(v4_rpms.join(' '), :v4)
     end
 
     # Using the map of paths to basenames, we re-hardlink the rpms we deleted.
