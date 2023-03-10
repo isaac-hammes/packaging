@@ -20,7 +20,7 @@ module Pkg::Sign::Rpm
     end
 
     # If gpg version is >=2.1, use the gpg1 binary to sign. Otherwise, use the standard sign command.
-    gpg_executable = if gpg_version_greater_than_21?
+    gpg_executable = if gpg_version_older_than_21?
                        "%__gpg /usr/bin/gpg1' --define '%__gpg_sign_cmd %{__gpg} gpg1"
                      else
                        '%__gpg_sign_cmd %{__gpg} gpg'
