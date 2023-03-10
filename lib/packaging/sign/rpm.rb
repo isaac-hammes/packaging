@@ -226,7 +226,7 @@ module Pkg::Sign::Rpm
 
     unless v4_rpms.empty?
       puts "Signing modern (v4) rpms:"
-      sign(v4_rpms.join(' '), :v4)
+      sign(v4_rpms.join(' '))
     end
 
     # Using the map of paths to basenames, we re-hardlink the rpms we deleted.
