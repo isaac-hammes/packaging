@@ -34,6 +34,10 @@ module Pkg::Sign::Rpm
       #{define_gpg_sign_cmd(signing_version)}
     ].join(' ')
 
+    Pkg::Util::Execution.capture3('printenv', true)
+    Pkg::Util::Execution.capture3('cat /var/lib/jenkins/.gpg-agent-info', true)
+    Pkg::Util::Execution.capture3('ls /run/user/**/gnupg/*', true)
+
     Pkg::Util::Execution.capture3(sign_command, true)
   end
 
