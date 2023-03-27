@@ -35,8 +35,7 @@ module Pkg::Sign::Rpm
     ].join(' ')
 
     Pkg::Util::Execution.capture3('printenv', true)
-    Pkg::Util::Execution.capture3('cat /var/lib/jenkins/.gpg-agent-info', true)
-    Pkg::Util::Execution.capture3('ls /run/user/**/gnupg/*', true)
+    Pkg::Util::Execution.capture3("gpg-connect-agent 'keyinfo --list' /bye", true)
 
     Pkg::Util::Execution.capture3(sign_command, true)
   end
