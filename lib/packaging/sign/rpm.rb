@@ -35,7 +35,7 @@ module Pkg::Sign::Rpm
     ].join(' ')
 
     Pkg::Util::Execution.capture3('printenv', true)
-    Pkg::Util::Execution.capture3("echo $GNUPGHOME", true)
+    Pkg::Util::Execution.capture3("gpgconf --list-dirs", true)
 
     Pkg::Util::Execution.capture3(sign_command, true)
   end
@@ -90,10 +90,10 @@ module Pkg::Sign::Rpm
 
   def passphrase_fd_flag
     # We use passphrase caching on GPG >= 2.1, so no passphrase-fd is needed.
-    return '--passphrase-fd 3' unless gpg_version_older_than_21?
+    return '' unless gpg_version_older_than_21?
 
     # If the user has provided us their gpg agent setup, don't muck with it.
-    return '--passphrase-fd 3' if Pkg::Util.boolean_value(ENV['RPM_GPG_AGENT'])
+    return '' if Pkg::Util.boolean_value(ENV['RPM_GPG_AGENT'])
 
     # Assume our old setup where expect is providing input on fd 3
     return '--passphrase-fd 3'
