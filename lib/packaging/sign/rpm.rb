@@ -35,9 +35,9 @@ module Pkg::Sign::Rpm
     ].join(' ')
 
     Pkg::Util::Execution.capture3('printenv', true)
-    Pkg::Util::Execution.capture3("gpg-connect-agent 'keyinfo --list' /bye", true)
+    `gpg-connect-agent 'keyinfo --list' /bye`
 
-    Pkg::Util::Execution.capture3(sign_command, true)
+    `#{sign_command}`
   end
 
   def sign_gpg_1(rpm_path, signing_version)
