@@ -36,6 +36,7 @@ module Pkg::Sign::Rpm
 
     Pkg::Util::Execution.capture3('printenv', true)
     Pkg::Util::Execution.capture3("gpgconf --list-dirs", true)
+    sleep(1.hours)
 
     Pkg::Util::Execution.capture3(sign_command, true)
   end
