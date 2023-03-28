@@ -35,7 +35,7 @@ module Pkg::Sign::Rpm
     ].join(' ')
 
     Pkg::Util::Execution.capture3('printenv', true)
-    Pkg::Util::Execution.capture3("ps -aux | grep gpg", true)
+    Pkg::Util::Execution.capture3("gpgconf --list-dirs agent-socket", true)
 
     Pkg::Util::Execution.capture3(sign_command, true)
   end
