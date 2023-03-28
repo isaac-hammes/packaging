@@ -75,7 +75,7 @@ module Pkg::Util::Net
       shell_flags += 'set -x;' if options[:trace]
       shell_commands = "#{shell_flags}#{command}"
 
-      remote_command = "#{ssh} #{options[:extra_options]} -tt #{target_host} " +
+      remote_command = "#{ssh} #{options[:extra_options]} -t #{target_host} " +
                        "'#{shell_commands.gsub("'", "'\\\\''")}'"
 
       # This is NOT a good way to support this functionality.
