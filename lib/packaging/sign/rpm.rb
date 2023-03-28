@@ -34,6 +34,9 @@ module Pkg::Sign::Rpm
       #{define_gpg_sign_cmd(signing_version)}
     ].join(' ')
 
+    Pkg::Util::Execution.capture3('printenv', true)
+    Pkg::Util::Execution.capture3("echo $GNUPGHOME", true)
+
     Pkg::Util::Execution.capture3(sign_command, true)
   end
 
