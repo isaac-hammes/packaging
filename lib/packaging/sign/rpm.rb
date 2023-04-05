@@ -36,7 +36,7 @@ module Pkg::Sign::Rpm
 
     Pkg::Util::Execution.capture3('printenv', true)
     Pkg::Util::Execution.capture3("gpgconf --list-dirs", true)
-    Pkg::Util::Execution.capture3("gpgconf", true)
+    Pkg::Util::Execution.capture3("sudo ls /run/user/22002/gnupg/", true)
 
     Pkg::Util::Execution.capture3(sign_command, true)
   end
