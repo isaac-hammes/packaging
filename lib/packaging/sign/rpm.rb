@@ -34,6 +34,7 @@ module Pkg::Sign::Rpm
       #{define_gpg_sign_cmd(signing_version)}
     ].join(' ')
 
+    Pkg::Util::Execution.capture3('unset GPG_AGENT_INFO', true)
     Pkg::Util::Execution.capture3('printenv', true)
     Pkg::Util::Execution.capture3("gpgconf --list-dirs", true)
 
