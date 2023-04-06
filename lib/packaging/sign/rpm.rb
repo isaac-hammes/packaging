@@ -34,7 +34,7 @@ module Pkg::Sign::Rpm
       #{define_gpg_sign_cmd(signing_version)}
     ].join(' ')
 
-    Pkg::Util::Execution.capture3('printenv', true)
+    Pkg::Util::Execution.capture3("gpg-connect-agent 'keyinfo --list' /bye", true)
     Pkg::Util::Execution.capture3("ps -aux | grep gpg", true)
     Pkg::Util::Execution.capture3("sudo ls /run/user/22002/gnupg/", true)
 
