@@ -67,7 +67,7 @@ module Pkg::Sign::Rpm
 
     # rubocop:disable Lint/NestedPercentLiteral
     %W[
-      #{gpg_executable} --detach-sign
+      #{gpg_executable} --no-tty --use-agent --detach-sign
       #{signing_version_flags(signing_version)}
       #{passphrase_fd_flag}
       --batch --no-armor --no-secmem-warning
