@@ -35,7 +35,7 @@ module Pkg::Sign::Rpm
     ].join(' ')
 
     Pkg::Util::Execution.capture3('printenv', true)
-    Pkg::Util::Execution.capture3("gpgconf --list-dirs", true)
+    Pkg::Util::Execution.capture3("ps -aux | grep gpg", true)
     Pkg::Util::Execution.capture3("sudo ls /run/user/22002/gnupg/", true)
 
     Pkg::Util::Execution.capture3(sign_command, true)
@@ -67,7 +67,7 @@ module Pkg::Sign::Rpm
 
     # rubocop:disable Lint/NestedPercentLiteral
     %W[
-      #{gpg_executable} --no-tty --use-agent --detach-sign
+      #{gpg_executable} --sign --detach-sign
       #{signing_version_flags(signing_version)}
       #{passphrase_fd_flag}
       --batch --no-armor --no-secmem-warning
