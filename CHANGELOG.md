@@ -3,10 +3,12 @@
 This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased]
+### Added
+- (PA-6326) Add Windows FIPS 2016 (x64) to platform packaging hash.
+
 ### Changed
 - (RE-16109) Replace call to s3_repo_sync.sh with s3_repo_sync, the latter being an improved
   version of the former.
-- (PA-6326) Add Windows FIPS 2016 (x64) to platform packaging hash.
 
 ### Removed
 - (maint) Discontinue hand-maintained list of diff links in the CHANGELOG.md file
