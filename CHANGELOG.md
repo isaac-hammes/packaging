@@ -6,12 +6,15 @@ This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 ### Added
 - (PA-6326) Add Windows FIPS 2016 (x64) to platform packaging hash.
 
+### Removed
+- (RE-16505) Removed Arista/swix support
+- (RE-16504) Remove unused validation routines. These routines were never realized and gave
+    a false impression that something was being validated when it was not.
+- (maint) Discontinue hand-maintained list of diff links in the CHANGELOG.md file
+
 ### Changed
 - (RE-16109) Replace call to s3_repo_sync.sh with s3_repo_sync, the latter being an improved
   version of the former.
-
-### Removed
-- (maint) Discontinue hand-maintained list of diff links in the CHANGELOG.md file
 
 ## [0.121.0] - 2024-07-31
 ### Added

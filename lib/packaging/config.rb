@@ -99,7 +99,7 @@ module Pkg
 
           # Remove the f-prefix from the fedora platform tag keys so that
           # beaker can rely on consistent keys once we rip out the f for good
-          tag = original_tag.sub(/fedora-f/, 'fedora-')
+          tag = original_tag.sub('fedora-f', 'fedora-')
 
           data[tag] ||= {}
 
@@ -140,7 +140,7 @@ module Pkg
               repo_config = "../repo_configs/rpm/pl-#{self.project}-" \
                             "#{self.ref}-#{original_tag}.repo"
             end
-          when 'swix', 'svr4', 'ips', 'dmg', 'msi'
+          when 'svr4', 'ips', 'dmg', 'msi'
             # No repo_configs for these platforms, so do nothing.
           else
             fail "Error: Unknown package format: '#{package_format}'. Maybe update PLATFORM_INFO?"
@@ -395,31 +395,6 @@ module Pkg
           if self.instance_variable_get("@#{v[:var]}")
             warn v[:message]
           end
-        end
-      end
-
-      ##
-      #   Ask for validation of BUILD_PARAMS
-      #
-      #   Issued as warnings initially but the intent is to turn this into
-      #   a failure.
-      #
-      def perform_validations
-        error_count = 0
-        Pkg::Params::VALIDATIONS.each do |v|
-          variable_name = v[:var]
-          variable_value = self.instance_variable_get("@#{v[:var]}")
-          validations = v[:validations]
-          validations.each do |validation|
-            unless Pkg::ConfigValidations.send(validation, variable_value)
-              warn "Warning: variable \"#{variable_name}\" failed validation \"#{validation}\""
-              error_count += 1
-            end
-          end
-        end
-
-        if error_count != 0
-          warn "Warning: #{error_count} validation failure(s)."
         end
       end
 
