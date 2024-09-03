@@ -15,6 +15,7 @@ This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 ### Changed
 - (RE-16109) Replace call to s3_repo_sync.sh with s3_repo_sync, the latter being an improved
   version of the former.
+- (maint) Use v4 signatures for redhatfips 7/8, make sign command output verbose, and specify digest-algo as sha512.
 
 ## [0.121.0] - 2024-07-31
 ### Added
