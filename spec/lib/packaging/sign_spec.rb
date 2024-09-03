@@ -61,13 +61,10 @@ describe 'Pkg::Sign' do
       let(:rpms_not_to_sign) do
         %W[#{rpm_directory}/aix/7.1/PC1/ppc/puppet-agent-5.5.3-1.aix7.1.ppc.rpm]
       end
-      let(:v3_rpms) do
-        %W[#{rpm_directory}/redhatfips/7/PC1/x86_64/puppet-agent-5.5.3-1.redhatfips7.x86_64.rpm]
-      end
       let(:v4_rpms) do
         %W[%#{rpm_directory}/el/7/PC1/aarch64/puppet-agent-5.5.3-1.el7.aarch64.rpm]
       end
-      let(:rpms) { rpms_not_to_sign + v3_rpms + v4_rpms }
+      let(:rpms) { rpms_not_to_sign + v4_rpms }
       let(:already_signed_rpms) do
         %W[#{rpm_directory}/el/6/PC1/x86_64/puppet-agent-5.5.3-1.el6.x86_64.rpm]
       end
@@ -81,12 +78,11 @@ describe 'Pkg::Sign' do
           #{rpm_directory}/sles/12/puppet5/x86_64/puppetserver-5.3.3-1.sles12.noarch.rpm
         ]
       end
-      it 'signs both v3 and v4 rpms' do
+      it 'signs v4 rpms' do
         allow(Dir).to receive(:[]).with("#{rpm_directory}/**/*.rpm").and_return(rpms)
         rpms.each do |rpm|
           allow(Pkg::Sign::Rpm).to receive(:signed?).and_return(false)
         end
-        expect(Pkg::Sign::Rpm).to receive(:sign).with(v3_rpms.join(' '), :v3)
         expect(Pkg::Sign::Rpm).to receive(:sign).with(v4_rpms.join(' '), :v4)
         Pkg::Sign::Rpm.sign_all(rpm_directory)
       end
