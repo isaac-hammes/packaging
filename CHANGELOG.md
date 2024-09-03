@@ -3,6 +3,8 @@
 This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased]
+
+## [0.122.0] - 2024-09-03
 ### Added
 - (PA-6326) Add Windows FIPS 2016 (x64) to platform packaging hash.
 
@@ -13,7 +15,7 @@ This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 - (maint) Discontinue hand-maintained list of diff links in the CHANGELOG.md file
 
 ### Changed
-- (RE-16109) Replace call to s3_repo_sync.sh with s3_repo_sync, the latter being an improved
+- (RE-16109) Replace call to `s3_repo_sync.sh` with `s3_repo_sync`, the latter being an improved
   version of the former.
 - (maint) Use v4 signatures for redhatfips 7/8, make sign command output verbose, and specify digest-algo as sha512.
 
