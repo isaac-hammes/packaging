@@ -654,6 +654,11 @@ namespace :pl do
 
       target = args.target || 'artifacts'
       local_dir = args.local_dir || 'pkg'
+
+      warn "jenkins_repo_path: #{Pkg::Config.jenkins_repo_path}"
+      warn "project: #{Pkg::Config.project}"
+      warn "ref: #{Pkg::Config.ref}"
+
       project_basedir = File.join(
         Pkg::Config.jenkins_repo_path, Pkg::Config.project, Pkg::Config.ref
       )

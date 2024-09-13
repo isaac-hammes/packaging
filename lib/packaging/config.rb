@@ -290,18 +290,20 @@ module Pkg
       #   really belongs in the Rpm object.
 
       def load_versioning
-        if @project_root and Pkg::Util::Git.describe
-          @ref         = Pkg::Util::Git.sha_or_tag
-          @short_ref   = Pkg::Util::Git.sha_or_tag(7)
-          @version     = Pkg::Util::Version.dash_version
-          @gemversion  = Pkg::Util::Version.dot_version
-          @debversion  = Pkg::Util::Version.debversion
-          @origversion = Pkg::Util::Version.origversion
-          @rpmversion  = Pkg::Util::Version.rpmversion
-          @rpmrelease  = Pkg::Util::Version.rpmrelease
-        else
-          puts "Skipping determination of version via git describe, Pkg::Config.project_root is not set to the path of a tagged git repo."
+        unless @project_root && Pkg::Util::Git.describe
+          puts 'Skipping determination of version via git describe, Pkg::Config.project_root ' \
+               'is not set to the path of a tagged git repo.'
+          return
         end
+
+        @ref = Pkg::Util::Git.sha_or_tag
+        @short_ref = Pkg::Util::Git.sha_or_tag(7)
+        @version = Pkg::Util::Version.dash_version
+        @gemversion = Pkg::Util::Version.dot_version
+        @debversion = Pkg::Util::Version.debversion
+        @origversion = Pkg::Util::Version.origversion
+        @rpmversion = Pkg::Util::Version.rpmversion
+        @rpmrelease = Pkg::Util::Version.rpmrelease
       end
 
       ##
@@ -312,15 +314,16 @@ module Pkg
       #
       def load_envvars
         Pkg::Params::ENV_VARS.each do |v|
-          if var = ENV[v[:envvar].to_s]
-            case v[:type]
-            when :bool
-              self.instance_variable_set("@#{v[:var]}", Pkg::Util.boolean_value(var))
-            when :array
-              self.instance_variable_set("@#{v[:var]}", string_to_array(var))
-            else
-              self.instance_variable_set("@#{v[:var]}", var)
-            end
+          var = ENV[v[:envvar].to_s]
+          next unless var
+
+          case v[:type]
+          when :bool
+            self.instance_variable_set("@#{v[:var]}", Pkg::Util.boolean_value(var))
+          when :array
+            self.instance_variable_set("@#{v[:var]}", string_to_array(var))
+          else
+            self.instance_variable_set("@#{v[:var]}", var)
           end
         end
       end
