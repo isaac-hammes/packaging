@@ -1,7 +1,12 @@
 module Pkg::Sign::Dmg
   module_function
 
-  def sign(pkg_directory = 'pkg')
+  def sign(_)
+    warn 'OSX SIGNING TEMPORARILY STUBBED. SEE RE-16623'
+    return 0
+  end
+
+  def stubbed__sign(pkg_directory = 'pkg')
     use_identity = ''
     unless Pkg::Config.osx_signing_ssh_key.nil?
       use_identity = "-i #{Pkg::Config.osx_signing_ssh_key}"
