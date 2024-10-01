@@ -3,6 +3,8 @@
 This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased]
+
+## [0.122.1] - 2024-10-01
 ### Changed
 - (RE-16624) OS/X signing temporarily stubbed
 
