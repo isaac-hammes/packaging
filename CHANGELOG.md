@@ -3,6 +3,8 @@
 This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased]
+
+## [0.122.2] - 2024-10-07
 ### Changed
 - (RE-16628) Unstub OS/X signing
 
