@@ -181,15 +181,28 @@ namespace :pl do
     end
 
     task :deploy_signed_repos_to_s3, [:target_bucket] => "pl:fetch" do |t, args|
-      target_bucket = args.target_bucket or fail ":target_bucket is a required argument to #{t}"
+      fail ":target_bucket is a required argument to #{t}" unless args.target_bucket
+      target_bucket = args.target_bucket
 
-      # Ship it to the target for consumption
-      # First we ship the latest and clean up any repo-configs that are no longer valid with --delete-removed and --acl-public
-      Pkg::Util::Net.s3sync_to("pkg/#{Pkg::Config.project}-latest/", target_bucket, "#{Pkg::Config.project}-latest", ["--acl-public", "--delete-removed", "--follow-symlinks"])
+      # Ship it to the target for consumption.
+
+      # First we ship the latest and clean up any repo-configs that
+      # are no longer valid with --delete-removed and --acl-public
+      source = "pkg/#{Pkg::Config.project}-latest/"
+      target_directory = "#{Pkg::Config.project}-latest"
+      puts("S3 sync from '#{Dir.pwd}/#{source}' to 's3://#{target_bucket}/#{target_directory}'")
+      Pkg::Util::Net.s3sync_to(source, target_bucket, target_directory,
+                               ['--acl-public', '--delete-removed', '--follow-symlinks'])
+
       # Then we ship the sha version with just --acl-public
-      Pkg::Util::Net.s3sync_to("pkg/#{Pkg::Config.project}/", target_bucket, Pkg::Config.project, ["--acl-public", "--follow-symlinks"])
+      source = "pkg/#{Pkg::Config.project}/"
+      target_directory = Pkg::Config.project
+      puts("S3 sync from '#{Dir.pwd}/#{source}' to 's3://#{target_bucket}/#{target_directory}'")
+      Pkg::Util::Net.s3sync_to(source, target_bucket, target_directory,
+                               ['--acl-public', '--follow-symlinks'])
 
-      puts "'#{Pkg::Config.ref}' of '#{Pkg::Config.project}' has been shipped via s3 to '#{target_bucket}'"
+      puts "'#{Pkg::Config.ref}' of '#{Pkg::Config.project}' has been uploaded to" \
+           "'s3://#{target_bucket}'"
     end
 
     task :generate_signed_repo_configs, [:target_prefix] => "pl:fetch" do |t, args|

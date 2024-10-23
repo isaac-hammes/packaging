@@ -3,6 +3,8 @@
 This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased]
+### Changed
+- (maint) Make deploy_signed_repos_to_s3 just a bit more verbose
 
 ## [0.122.2] - 2024-10-07
 ### Changed

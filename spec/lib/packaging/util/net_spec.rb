@@ -182,8 +182,8 @@ describe 'Pkg::Util::Net' do
 
     it 'should fail if ~/.s3cfg is not present' do
       expect(Pkg::Util::Tool).to receive(:check_tool).with("s3cmd").and_return(s3cmd)
-      expect(Pkg::Util::File)
-        .to receive(:file_exists?)
+      expect(File)
+        .to receive(:exist?)
         .with(File.join(ENV['HOME'], '.s3cfg'))
         .and_return(false)
       expect { Pkg::Util::Net.s3sync_to('foo', 'bar', 'boo') }
@@ -192,25 +192,27 @@ describe 'Pkg::Util::Net' do
 
     it "should s3 sync 'thing' to 's3://foo@bar/home/foo/' with no flags" do
       expect(Pkg::Util::Tool).to receive(:check_tool).with("s3cmd").and_return(s3cmd)
-      expect(Pkg::Util::File)
-        .to receive(:file_exists?)
+      expect(File)
+        .to receive(:exist?)
         .with(File.join(ENV['HOME'], '.s3cfg'))
         .and_return(true)
       expect(Pkg::Util::Execution)
         .to receive(:capture3)
-        .with("#{s3cmd} sync  'thing' s3://foo@bar/home/foo/")
+        .with("#{s3cmd} sync  'thing' s3://foo@bar/home/foo/", anything)
       Pkg::Util::Net.s3sync_to("thing", "foo@bar", "home/foo")
     end
 
     it "should s3sync 'thing' to 's3://foo@bar/home/foo/' with --delete-removed and --acl-public" do
       expect(Pkg::Util::Tool).to receive(:check_tool).with("s3cmd").and_return(s3cmd)
-      expect(Pkg::Util::File)
-        .to receive(:file_exists?)
+      expect(File)
+        .to receive(:exist?)
         .with(File.join(ENV['HOME'], '.s3cfg'))
         .and_return(true)
       expect(Pkg::Util::Execution)
         .to receive(:capture3)
-        .with("#{s3cmd} sync --delete-removed --acl-public 'thing' s3://foo@bar/home/foo/")
+        .with(
+          "#{s3cmd} sync --delete-removed --acl-public 'thing' s3://foo@bar/home/foo/", anything
+        )
       Pkg::Util::Net.s3sync_to("thing", "foo@bar", "home/foo", ["--delete-removed", "--acl-public"])
     end
   end
