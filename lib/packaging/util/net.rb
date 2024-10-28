@@ -184,7 +184,7 @@ module Pkg::Util::Net
         target_host: nil,
         extra_flags: nil,
         dryrun: ENV['DRYRUN']
-}.merge(opts.merge(opts.delete_if { |_, value| value.nil? })) # rubocop:disable Style/CollectionCompact
+}.merge(opts.merge(opts.delete_if { |_, value| value.nil? }))
 
       stdout, = Pkg::Util::Execution.capture3(rsync_cmd(source, options), true)
       stdout
@@ -216,15 +216,18 @@ module Pkg::Util::Net
       )
     end
 
-    def s3sync_to(source, target_bucket, target_directory = "", flags = [])
+    def s3sync_to(source, target_bucket, target_directory = '', flags = [])
       s3cmd = Pkg::Util::Tool.check_tool('s3cmd')
+      s3cfg_path = File.join(ENV['HOME'], '.s3cfg')
 
-      if Pkg::Util::File.file_exists?(File.join(ENV['HOME'], '.s3cfg'))
-        stdout, = Pkg::Util::Execution.capture3("#{s3cmd} sync #{flags.join(' ')} '#{source}' s3://#{target_bucket}/#{target_directory}/")
-        stdout
-      else
-        fail "#{File.join(ENV['HOME'], '.s3cfg')} does not exist. It is required to ship files using s3cmd."
+      unless File.exist?(s3cfg_path)
+        fail "#{s3cfg_path} does not exist. It is required to ship files using s3cmd."
       end
+
+      sync_command = "#{s3cmd} sync #{flags.join(' ')} '#{source}' " \
+                     "s3://#{target_bucket}/#{target_directory}/"
+
+      Pkg::Util::Execution.capture3(sync_command, true)
     end
 
     # This is fairly absurd. We're implementing curl by shelling out. What do I
