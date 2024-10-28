@@ -1,8 +1,10 @@
 # Change Log
 
-This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
+This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com).
 
 ## [Unreleased]
+
+## [0.122.3] - 2024-11-28
 ### Changed
 - (maint) Make deploy_signed_repos_to_s3 just a bit more verbose
 
