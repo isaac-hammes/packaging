@@ -276,6 +276,7 @@ module Pkg::Params
               { :var => :project_root,            :envvar => :PROJECT_ROOT },
               { :var => :random_mockroot,         :envvar => :RANDOM_MOCKROOT, :type => :bool },
               { :var => :rc_mocks,                :envvar => :MOCK },
+              { :var => :ref,                     :envvar => :PACKAGING_GITREF_REPLACEMENT },
               { :var => :release,                 :envvar => :RELEASE },
               { :var => :repo_name,               :envvar => :REPO_NAME },
               { :var => :repo_link_target,        :envvar => :REPO_LINK_TARGET },

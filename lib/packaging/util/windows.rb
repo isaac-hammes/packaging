@@ -12,7 +12,11 @@ module Pkg::Util::Windows
         packages = Dir["#{local_source_directory}/#{platform}/*"]
 
         archs.each do |arch|
-          package_version = Pkg::Util::Git.describe.tr('-', '.')
+          package_version = if ENV.key?('PACKAGING_GITREF_REPLACEMENT')
+                              ENV['PACKAGING_GITREF_REPLACEMENT']
+                            else
+                              Pkg::Util::Git.describe.tr('-', '.')
+                            end
           package_filename = File.join(
             local_source_directory, platform,
             "#{Pkg::Config.project}-#{package_version}-#{arch}.msi"

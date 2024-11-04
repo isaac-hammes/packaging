@@ -3,6 +3,9 @@
 This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com).
 
 ## [Unreleased]
+### Added
+- (maint) Provide a mechanism, by way of a new environment variable `PACKAGING_GITREF_REPLACEMENT`,
+  which allows us to not require a release tag before building product.
 
 ## [0.122.3] - 2024-11-28
 ### Changed
